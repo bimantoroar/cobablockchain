@@ -78,17 +78,18 @@ class Blockchain:
 
         return _hashlib.sha256(encoded_block).hexdigest()
     
-    def is_transaction_valid(self) -> bool:
+    def is_transaction_correct(self) -> str:
         block_index = 1
-        block = self.chain[block_index]
-        pemasukan= block["pemasukan_sebelumnya"]
         
-        while block_index < len(self.chain):
+        for block_index in range(len(self.chain)):
+            block = self.chain[block_index]
             # Check jika previous hash sama dengan hash block
-            if block["pembayaran_pajak"] != pemasukan*0.05:
-                return False
+            if block["pembayaran_pajak"] == block["pemasukan_sebelumnya"]*0.05:
+                res =  "Pembayaran Benar"
+            else:
+                res = "Pembayaran Tidak Benar"
             block_index += 1
-        return True
+            print(f'block {block_index}: {res}')
 
     def is_chain_valid(self) -> bool:
         previous_block = self.chain[0]
@@ -98,19 +99,6 @@ class Blockchain:
             block = self.chain[block_index]
             # Check jika previous hash sama dengan hash block
             if block["previous_hash"] != self._hash(previous_block):
-                return False
-
-            previous_proof = previous_block["proof"]
-            index, proof = block["index"], block["proof"]
-            hash_operation = _hashlib.sha256(
-                self._to_digest(
-                    new_proof=proof,
-                    previous_proof=previous_proof,
-                    index=index,
-                )
-            ).hexdigest()
-
-            if hash_operation[:4] != "0000":
                 return False
 
             previous_block = block
