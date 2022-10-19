@@ -1,6 +1,7 @@
 import datetime as _dt
 import hashlib as _hashlib
 import json as _json
+import random as rand
 
 #kodingan milik
 #https://github.com/sixfwa/blockchain-fastapi/
@@ -8,6 +9,7 @@ import json as _json
 class Blockchain:
     def __init__(self):
         self.chain = list()
+        self.reward = list()
         initial_block = self._create_block( #membuat block pertama
             pembayaran=0, proof=1, previous_hash="0", index=1,pemasukan=0,pengirim_pemasukan="genesis",nama="genesis",penerima="genesis"
         )
@@ -17,11 +19,12 @@ class Blockchain:
     def mine_block(self, nama:str,pemasukan:int,pengirim_pemasukan:str,pembayaran: int,penerima: str) -> dict:
         previous_block = self.get_previous_block()
         previous_proof = previous_block["proof"]
-        
+        reward = rand.randint(1,10)
         index = len(self.chain) + 1
         proof = self._proof_of_work(
             previous_proof=previous_proof, index=index
         )
+        self.reward.append(reward)
         previous_hash = self._hash(block=previous_block)
         block = self._create_block(
             pembayaran=pembayaran, proof=proof, previous_hash=previous_hash, index=index,pemasukan=pemasukan,pengirim_pemasukan=pengirim_pemasukan,
