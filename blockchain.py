@@ -9,12 +9,12 @@ class Blockchain:
     def __init__(self):
         self.chain = list()
         initial_block = self._create_block( #membuat block pertama
-            pembayaran_pajak=0, proof=1, previous_hash="0", index=1,pemasukan_sebelumnya=0,sumber_uang="genesis",nama="genesis"
+            pembayaran=0, proof=1, previous_hash="0", index=1,pemasukan_sebelumnya=0,sumber_uang="genesis",nama="genesis"
         )
         self.chain.append(initial_block) #menanmbahkan block pertama ke blockchain
 
         
-    def mine_block(self, nama:str,pemasukan_sebelumnya:int,sumber_uang:str,pembayaran_pajak: int,) -> dict:
+    def mine_block(self, nama:str,pemasukan_sebelumnya:int,sumber_uang:str,pembayaran: int,) -> dict:
         previous_block = self.get_previous_block()
         previous_proof = previous_block["proof"]
         
@@ -24,14 +24,14 @@ class Blockchain:
         )
         previous_hash = self._hash(block=previous_block)
         block = self._create_block(
-            pembayaran_pajak=pembayaran_pajak, proof=proof, previous_hash=previous_hash, index=index,pemasukan_sebelumnya=pemasukan_sebelumnya,sumber_uang=sumber_uang,
+            pembayaran=pembayaran, proof=proof, previous_hash=previous_hash, index=index,pemasukan_sebelumnya=pemasukan_sebelumnya,sumber_uang=sumber_uang,
             nama=nama
         )
         self.chain.append(block)
         return block
 
     def _create_block(
-        self, pembayaran_pajak: int, proof: int, previous_hash: str,pemasukan_sebelumnya: int,sumber_uang: str, index: int, nama:str,
+        self, pembayaran: int, proof: int, previous_hash: str,pemasukan_sebelumnya: int,sumber_uang: str, index: int, nama:str,
     ) -> dict:
         block = {
             "index": index,
@@ -41,7 +41,7 @@ class Blockchain:
             "previous_hash": previous_hash,
             "pemasukan_sebelumnya": pemasukan_sebelumnya,
             "sumber_uang":sumber_uang,
-            "pembayaran_pajak": pembayaran_pajak,
+            "pembayaran": pembayaran,
             
         }
 
@@ -84,7 +84,7 @@ class Blockchain:
         for block_index in range(len(self.chain)):
             block = self.chain[block_index]
             # Check jika previous hash sama dengan hash block
-            if block["pembayaran_pajak"] == block["pemasukan_sebelumnya"]*0.05:
+            if block["pembayaran"] == block["pemasukan_sebelumnya"]*0.05:
                 res =  "Pembayaran Benar"
             else:
                 res = "Pembayaran Tidak Benar"
